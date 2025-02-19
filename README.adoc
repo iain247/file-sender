@@ -1,0 +1,15 @@
+= File Sender
+
+This application monitors a directory and sends any newly added files to a specific email address.
+
+Example use case: sending pdfs to my Kindle.
+
+The following environment variables are required:
+
+* SENDER_SMTP_HOST
+* SENDER_EMAIL
+* SENDER_PASSWORD
+* DESTINATION_EMAIL
+
+NOTE: Port 587 is hardcoded for the sender email port
+
