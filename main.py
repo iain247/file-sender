@@ -7,6 +7,7 @@ from email.message import EmailMessage
 from dotenv import load_dotenv
 
 WATCH_FOLDER = "/watch"
+SENT_FILES_NAME = "sent_files.txt"
 
 class FileHandler(FileSystemEventHandler):
     def __init__(self, sender_host, sender_email, sender_password, destination_email):
@@ -19,7 +20,11 @@ class FileHandler(FileSystemEventHandler):
         if not event.is_directory:
             print(f"New file detected: {event.src_path}", flush=True)
             # TODO: Check if the file has already been sent? Use a text file to track sent files?
-            send_email(event.src_path, self.sender_host, self.sender_email, self.sender_password, self.destination_email)
+            if event.src_path in read_sent_files():
+                send_email(event.src_path, self.sender_host, self.sender_email, self.sender_password, self.destination_email)
+                add_sent_file(event.src_path)
+            else:
+                print("File has already been sent to kindle", flush=True)
 
 def send_email(file_path, sender_host, sender_email, sender_password, destination_email):
     subject = "New file!"
@@ -40,6 +45,14 @@ def send_email(file_path, sender_host, sender_email, sender_password, destinatio
         server.send_message(msg)
 
     print(f"Email sent to {destination_email}", flush=True)
+
+def read_sent_files():
+    file = open(SENT_FILES_NAME, "r")
+    return [sent_file for sent_file in file]
+
+def add_sent_file(filename):
+    with open(SENT_FILES_NAME, "a") as file:
+        file.write(filename + "\n")
 
 def main():
     load_dotenv()
