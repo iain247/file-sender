@@ -21,10 +21,10 @@ class FileHandler(FileSystemEventHandler):
             print(f"New file detected: {event.src_path}", flush=True)
             # TODO: Check if the file has already been sent? Use a text file to track sent files?
             if event.src_path in read_sent_files():
+                print("File has already been sent to kindle", flush=True)
+            else:
                 send_email(event.src_path, self.sender_host, self.sender_email, self.sender_password, self.destination_email)
                 add_sent_file(event.src_path)
-            else:
-                print("File has already been sent to kindle", flush=True)
 
 def send_email(file_path, sender_host, sender_email, sender_password, destination_email):
     subject = "New file!"
@@ -47,8 +47,8 @@ def send_email(file_path, sender_host, sender_email, sender_password, destinatio
     print(f"Email sent to {destination_email}", flush=True)
 
 def read_sent_files():
-    file = open(SENT_FILES_NAME, "r")
-    return [sent_file for sent_file in file]
+    with open(SENT_FILES_NAME, "r") as file:
+        return [line.strip() for line in file]
 
 def add_sent_file(filename):
     with open(SENT_FILES_NAME, "a") as file:
