@@ -7,7 +7,7 @@ from email.message import EmailMessage
 from dotenv import load_dotenv
 
 WATCH_FOLDER = "/watch"
-SENT_FILES_NAME = "config/sent_files.txt"
+SENT_FILES_NAME = "/config/sent_files.txt"
 
 class FileHandler(FileSystemEventHandler):
     def __init__(self, sender_host, sender_email, sender_password, destination_email):
