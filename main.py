@@ -61,6 +61,10 @@ def main():
     sender_password = os.getenv("SENDER_PASSWORD")
     destination_email = os.getenv("DESTINATION_EMAIL")
 
+    # create the text file containing sent files if it doesn't exist
+    with open(SENT_FILES_NAME, "a"):
+        pass
+
     event_handler = FileHandler(sender_host, sender_email, sender_password, destination_email)
     observer = Observer()
     observer.schedule(event_handler, WATCH_FOLDER, recursive=False)
